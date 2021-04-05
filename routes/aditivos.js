@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { check } = require('express-validator');
-const Aditivo = require('../models/aditivos');
+const aditivoController = require('../controllers/aditivos');
 
 // añadir aditivo
 router.post('/',
@@ -11,29 +11,10 @@ router.post('/',
         check('vegano', 'Es necesario indicar si el aditivo es vegano o no').not().isEmpty()
     ],
 
-    async(req, res) => {
-        try {
-            const aditivo = new Aditivo(req.body);
-            await aditivo.save();
-            res.json({aditivo});
-        } catch (error) {
-            console.log(error);
-            res.status(500).send('Vaya, parece que hubo un error');
-        }
-    }
+    aditivoController.crearAditivo
 );
 
 // obtener aditivo
-router.get('/',
-    async(req, res) => {
-        try {
-            const aditivos = await Aditivo.find();
-            res.json({aditivos});
-        } catch (error) {
-            console.log(error);
-            res.status(500).send('Vaya, parece que hubo un error');
-        }
-    }
-);
+router.get('/', aditivoController.recogerAditivo);
 
 module.exports = router;
